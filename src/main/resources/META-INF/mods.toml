@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+issueTrackerURL="https://github.com/kirballs/Usual-Allies/issues"
+
+[[mods]]
+modId="usualallies"
+version="1.0.0"
+displayName="Usual Allies"
+logoFile="logo.png"
+credits="Created by kirballs"
+authors="kirballs"
+description='''
+Usual Allies is a mod that clashes Minecraft's realm with different dimensions, allowing you to meet iconic characters.
+'''
+
+[[dependencies.usualallies]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,48)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.usualallies]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1,1.21)"
+    ordering="NONE"
+    side="BOTH"
