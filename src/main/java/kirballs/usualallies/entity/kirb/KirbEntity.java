@@ -606,9 +606,11 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         // Check for dye (only when tamed)
         if (isTame() && isOwnedBy(player) && itemStack.getItem() instanceof DyeItem dyeItem) {
             DyeColor color = dyeItem.getDyeColor();
-            if (getColor() != color.getId()) {
+            // Pink dye resets Kirb to default color (-1), other dyes apply their color ID
+            int targetColor = (color == DyeColor.PINK) ? -1 : color.getId();
+            if (getColor() != targetColor) {
                 if (!level().isClientSide) {
-                    setColor(color.getId());
+                    setColor(targetColor);
                     if (!player.getAbilities().instabuild) {
                         itemStack.shrink(1);
                     }

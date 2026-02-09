@@ -1,0 +1,23 @@
+{
+    "format_version": "1.8.0",
+    "animations": {
+        "animation.air_bullet.idle": {
+            "loop": true,
+            "animation_length": 1.0,
+            "bones": {
+                "main": {
+                    "scale": {
+                        "0.0": [1, 1, 1],
+                        "0.5": [1.1, 1.1, 1.1],
+                        "1.0": [1, 1, 1]
+                    },
+                    "rotation": {
+                        "0.0": [0, 0, 0],
+                        "0.5": [0, 180, 0],
+                        "1.0": [0, 360, 0]
+                    }
+                }
+            }
+        }
+    }
+}

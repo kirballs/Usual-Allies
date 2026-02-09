@@ -22,9 +22,10 @@ public class ModEntities {
 
     // Kirb entity registration
     // Customize the hitbox size (width, height) and other properties as needed
+    // The model's main body is ~13.6 units (0.85 blocks), so hitbox is slightly smaller
     public static final RegistryObject<EntityType<KirbEntity>> KIRB =
             ENTITY_TYPES.register("kirb", () -> EntityType.Builder.of(KirbEntity::new, MobCategory.CREATURE)
-                    .sized(0.85f, 0.85f) // Width and height of the hitbox - adjust to match your model
+                    .sized(0.7f, 0.7f) // Width and height of the hitbox - slightly smaller than the model
                     .clientTrackingRange(10) // How far away players can see this entity
                     .updateInterval(3) // How often the entity updates position to clients (in ticks)
                     .build(new ResourceLocation(UsualAllies.MOD_ID, "kirb").toString()));
