@@ -120,8 +120,8 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
     // Interval between arm flaps while flying (0.3 seconds = 6 ticks)
     private static final int FLAP_INTERVAL = 6;
     
-    // Respawn delay in ticks after losing a life (few minutes = 3600 ticks = 3 minutes)
-    private static final int RESPAWN_DELAY = 3600; // 3 minutes - adjust as needed
+    // Respawn delay in ticks after losing a life (3 minutes = 3600 ticks)
+    private static final int RESPAWN_DELAY = 3600;
 
     // === INSTANCE VARIABLES ===
     
@@ -327,8 +327,10 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
                 
                 // Pull entity towards Kirb
                 if (distance > MOUTH_RANGE) {
-                    // Calculate pull strength (stronger when closer)
-                    double pullStrength = 0.15 * (1.0 - distance / INHALE_RANGE); // 0.15 = sprint speed escape threshold
+                    // Calculate pull strength based on distance
+                    // Maximum pull of 0.15 when closest, decreasing with distance
+                    // Players can escape by sprinting (movement speed > 0.15)
+                    double pullStrength = 0.15 * (1.0 - distance / INHALE_RANGE);
                     Vec3 pullVec = this.position().subtract(entity.position()).normalize().scale(pullStrength);
                     entity.setDeltaMovement(entity.getDeltaMovement().add(pullVec));
                 } else {

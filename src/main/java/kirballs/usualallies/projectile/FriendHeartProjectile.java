@@ -21,8 +21,8 @@ import net.minecraft.world.phys.HitResult;
  */
 public class FriendHeartProjectile extends ThrowableProjectile {
 
-    // Maximum travel distance in blocks before despawning
-    private static final double MAX_DISTANCE = 4.0; // 3-4 blocks
+    // Maximum travel distance in blocks before despawning (4 blocks)
+    private static final double MAX_DISTANCE = 4.0;
     
     // Starting position for distance tracking
     private double startX, startY, startZ;
