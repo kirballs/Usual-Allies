@@ -1,0 +1,101 @@
+{
+    "kirb_step": {
+        "subtitle": "Kirb walks",
+        "sounds": [
+            {
+                "name": "usualallies:kirb_step",
+                "stream": false
+            }
+        ]
+    },
+    "kirb_jump": {
+        "subtitle": "Kirb jumps",
+        "sounds": [
+            {
+                "name": "usualallies:kirb_jump",
+                "stream": false
+            }
+        ]
+    },
+    "kirb_flap": {
+        "subtitle": "Kirb flaps",
+        "sounds": [
+            {
+                "name": "usualallies:kirb_flap",
+                "stream": false
+            }
+        ]
+    },
+    "kirb_exhale": {
+        "subtitle": "Kirb exhales",
+        "sounds": [
+            {
+                "name": "usualallies:kirb_exhale",
+                "stream": false
+            }
+        ]
+    },
+    "kirb_inhale": {
+        "subtitle": "Kirb inhales",
+        "sounds": [
+            {
+                "name": "usualallies:kirb_inhale",
+                "stream": false
+            }
+        ]
+    },
+    "kirb_capture": {
+        "subtitle": "Kirb captures",
+        "sounds": [
+            {
+                "name": "usualallies:kirb_capture",
+                "stream": false
+            }
+        ]
+    },
+    "kirb_spit_star": {
+        "subtitle": "Kirb spits star",
+        "sounds": [
+            {
+                "name": "usualallies:kirb_spit_star",
+                "stream": false
+            }
+        ]
+    },
+    "kirb_swallow": {
+        "subtitle": "Kirb swallows",
+        "sounds": [
+            {
+                "name": "usualallies:kirb_swallow",
+                "stream": false
+            }
+        ]
+    },
+    "kirb_one_up": {
+        "subtitle": "Kirb gains a life",
+        "sounds": [
+            {
+                "name": "usualallies:kirb_one_up",
+                "stream": false
+            }
+        ]
+    },
+    "friend_heart_throw": {
+        "subtitle": "Friend Heart thrown",
+        "sounds": [
+            {
+                "name": "usualallies:friend_heart_throw",
+                "stream": false
+            }
+        ]
+    },
+    "friend_heart_hit": {
+        "subtitle": "Friend Heart hits",
+        "sounds": [
+            {
+                "name": "usualallies:friend_heart_hit",
+                "stream": false
+            }
+        ]
+    }
+}
