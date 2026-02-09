@@ -1,0 +1,49 @@
+Kirby’s Features for the "Usual Allies" Mod
+
+1. Kirby’s Spawn Mechanism
+After the dimensional event, Kirby will spawn in his house structure, generating in a semi-random safe location in new chunks (e.g., plains, meadows). The house could be a small dome made of wood and wool, featuring a star emblem and potentially a chest with useful items (like hints for interacting with Kirby or event-related elements).
+
+2. Inhaling Attack Behavior
+Kirby will initiate his inhale attack if a target (player or mob) comes within 2-3 blocks of him.
+- Inhaling Mechanics:
+  - When an inhale begins, any target within Kirby’s pulling radius experiences a "dragging effect," pulling them closer to Kirby. This can be accomplished using mechanics similar to the Ender Dragon's Breath or explosions (negative velocity toward Kirby).
+  - If the entity enters Kirby’s "mouth" hitbox (1 block around him), it is captured inside.
+- Lingering Damage: While inside Kirby’s mouth, the target suffers cactus-like lingering damage (1-2 HP per second). Damage continues until:
+  - The entity’s health depletes completely (for Kirby to inhale).
+  - Kirby decides to spit/swallow the mob.
+- Outcome of Inhale:
+  - If no ability exists:
+    - The target is either spit out as a star projectile or swallowed. Spit-out stars have moderate impact damage and knockback, potentially explosive.
+  - Big Mob Exception: Certain large mobs (e.g., Ravagers, Ender Dragon) cannot be inhaled but may drop special items for Kirby’s use.
+
+3. Friend Heart Mechanic
+Kirby is the source of Friend Hearts, a unique item inspired by Kirby Star Allies, used to befriend hostile mobs and turn defeated enemies into allies.
+- How Friend Hearts Work:
+  - After defeating a hostile mob (e.g., one of your mod’s guest characters), the player throws a Friend Heart at the entity.
+  - On impact, the defeated mob becomes neutral/friendly and joins the player’s side.
+- Kirby as a Source of Friend Hearts:
+  - Kirby will periodically generate Friend Hearts when loyal to the player, acting as their primary acquisition method.
+- Befriended Mobs’ Benefits:
+  - Combat Assistance: Befriended mobs can fight on the player’s behalf.
+  - Utility Roles: Retain unique attributes—for example, accessing their special abilities.
+- Friend Hearts only work on mod-introduced characters, not standard vanilla mobs.
+
+4. Friendly Kirby Features
+If the player chooses to befriend Kirby (by feeding him melon blocks or cake), he becomes:
+- Loyal to the Player: Kirby functions like a tamed wolf, following and assisting the player.
+- Combat Assistance: Kirby will use inhaling to aid the player in combat.
+- Friend Heart Generator: Over time, Kirby creates Friend Hearts for the player to use.
+- Player Commands: The player can control Kirby via right-click or a GUI:
+  - Command Kirby to follow, stay, or wander.
+  - Disable specific abilities temporarily.
+
+5. Life and Respawn System
+Kirby has 3 Lives, mirroring his Kirby game mechanics:
+- Kirby "dies" after depleting his health during combat or excessive lingering damage, temporarily disappearing.
+- He respawns at his house structure after a cooldown.
+- The player can craft or find a 1-Up item (e.g., crafted from gold ingots and glowstone) to replenish Kirby’s lives.
+
+Kirby Event Pre-Spawn
+To unlock Kirby, the progression includes an initiation event. For example:
+- A Dimensional Rift structure or entity spawns near the player, possibly marked with star-shaped particles or glowing elements to attract attention.
+- The player performs a ritual, solves a puzzle, or defeats an enemy associated with the rift to unlock access to Kirby’s house, enabling his spawn.
