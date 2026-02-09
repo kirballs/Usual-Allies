@@ -1,4 +1,15 @@
 {
-"entity.kirbs_crossover.kirbo": "Kirbo",
-"item.kirbs_crossover.kirbo_spawn_egg":"Kirbo Spawn Egg"
+    "entity.usualallies.kirb": "Kirb",
+    "entity.usualallies.kirb.command.follow": "Kirb: Following",
+    "entity.usualallies.kirb.command.stay": "Kirb: Staying",
+    "entity.usualallies.kirb.command.wander": "Kirb: Wandering",
+    "entity.usualallies.kirb.command.patrol": "Kirb: Patrolling",
+    "item.usualallies.kirb_spawn_egg": "Kirb Spawn Egg",
+    "item.usualallies.friend_heart": "Friend Heart",
+    "item.usualallies.one_up": "1-Up",
+    "itemGroup.usualallies.usual_allies_tab": "Usual Allies",
+    "entity.usualallies.ally.command.follow": "%s: Following",
+    "entity.usualallies.ally.command.stay": "%s: Staying",
+    "entity.usualallies.ally.command.wander": "%s: Wandering",
+    "entity.usualallies.ally.command.patrol": "%s: Patrolling"
 }
