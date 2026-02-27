@@ -1,17 +1,21 @@
 package kirballs.usualallies.entity.kirb;
 
 import kirballs.usualallies.UsualAllies;
+import kirballs.usualallies.network.EmptyClickPacket;
+import kirballs.usualallies.network.ModNetwork;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 
 /**
- * Server-side event handler for Kirb's carry/throw mechanic and the
+ * Event handler for Kirb's carry/throw mechanic and the
  * player-escape-from-mouth mechanic.
  *
  * Carry/throw:
@@ -25,25 +29,46 @@ import java.util.List;
  *     - Left-click (punch air OR attack an entity)
  *     - Right-click empty space
  */
-@Mod.EventBusSubscriber(modid = UsualAllies.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class KirbCarryEvents {
 
     // -------------------------------------------------------------------------
-    // Throw mechanic
+    // Client-side forwarding for empty-click events
     // -------------------------------------------------------------------------
 
-    @SubscribeEvent
-    public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty event) {
-        Player player = event.getEntity();
-        if (player.level().isClientSide) return;
-        if (!player.getMainHandItem().isEmpty()) return;
+    @Mod.EventBusSubscriber(modid = UsualAllies.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    public static class ClientEvents {
 
-        // Priority 1: throw held Kirb
-        KirbEntity held = findHeldKirb(player);
-        if (held != null) {
-            held.throwKirb(player);
-            event.setCanceled(true);
-            return;
+        @SubscribeEvent
+        public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty event) {
+            Player player = event.getEntity();
+            if (!player.level().isClientSide) return;
+            ModNetwork.CHANNEL.send(PacketDistributor.SERVER.noArg(), new EmptyClickPacket(true));
+        }
+
+        @SubscribeEvent
+        public static void onLeftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
+            Player player = event.getEntity();
+            if (!player.level().isClientSide) return;
+            ModNetwork.CHANNEL.send(PacketDistributor.SERVER.noArg(), new EmptyClickPacket(false));
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Server-side handlers
+    // -------------------------------------------------------------------------
+
+    public static void handleEmptyClickServer(Player player, boolean rightClick) {
+        if (player.level().isClientSide) return;
+
+        if (rightClick) {
+            if (!player.getMainHandItem().isEmpty()) return;
+
+            // Priority 1: throw held Kirb
+            KirbEntity held = findHeldKirb(player);
+            if (held != null) {
+                held.throwKirb(player);
+                return;
+            }
         }
 
         // Priority 2: count as escape input if player is captured
@@ -54,33 +79,22 @@ public class KirbCarryEvents {
     }
 
     // -------------------------------------------------------------------------
-    // Escape mash – left-click (punch air)
-    // -------------------------------------------------------------------------
-
-    @SubscribeEvent
-    public static void onLeftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
-        Player player = event.getEntity();
-        if (player.level().isClientSide) return;
-
-        KirbEntity captor = findCaptorKirb(player);
-        if (captor != null) {
-            captor.onCapturedPlayerAction();
-        }
-    }
-
-    // -------------------------------------------------------------------------
     // Escape mash – attack (punch entity)
     // -------------------------------------------------------------------------
 
-    @SubscribeEvent
-    public static void onLivingAttack(LivingAttackEvent event) {
-        // We want the case where a player swings and the attack source is the player
-        if (!(event.getSource().getEntity() instanceof Player player)) return;
-        if (player.level().isClientSide) return;
+    @Mod.EventBusSubscriber(modid = UsualAllies.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ServerEvents {
 
-        KirbEntity captor = findCaptorKirb(player);
-        if (captor != null) {
-            captor.onCapturedPlayerAction();
+        @SubscribeEvent
+        public static void onLivingAttack(LivingAttackEvent event) {
+            // We want the case where a player swings and the attack source is the player
+            if (!(event.getSource().getEntity() instanceof Player player)) return;
+            if (player.level().isClientSide) return;
+
+            KirbEntity captor = findCaptorKirb(player);
+            if (captor != null) {
+                captor.onCapturedPlayerAction();
+            }
         }
     }
 
