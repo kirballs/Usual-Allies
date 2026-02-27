@@ -8,16 +8,26 @@ import software.bernie.geckolib.model.GeoModel;
 /**
  * GeckoLib model for Kirb entity.
  * References the geometry JSON, texture, and animation files.
+ *
+ * Textures are split into two layers:
+ *   Body  – textures/entity/kirb/body/body_(color).png
+ *           Default (pink) uses body_default.png.
+ *   Face overlay – rendered by KirbFaceLayer as a second pass
+ *                  using a state-appropriate face texture.
  */
 public class KirbModel extends GeoModel<KirbEntity> {
 
-    // Path to the geometry model file
-    // Location: assets/usualallies/geo/kirb.geo.json
-    private static final ResourceLocation MODEL = new ResourceLocation(UsualAllies.MOD_ID, "geo/kirb.geo.json");
-    
-    // Path to the animation file
-    // Location: assets/usualallies/animations/kirb.animation.json
-    private static final ResourceLocation ANIMATION = new ResourceLocation(UsualAllies.MOD_ID, "animations/kirb.animation.json");
+    private static final ResourceLocation MODEL =
+            new ResourceLocation(UsualAllies.MOD_ID, "geo/kirb.geo.json");
+    private static final ResourceLocation ANIMATION =
+            new ResourceLocation(UsualAllies.MOD_ID, "animations/kirb.animation.json");
+
+    // Dye color names ordered by DyeColor ordinal
+    private static final String[] COLOR_NAMES = {
+            "white", "orange", "magenta", "light_blue", "yellow", "lime",
+            "pink", "gray", "light_gray", "cyan", "purple", "blue",
+            "brown", "green", "red", "black"
+    };
 
     @Override
     public ResourceLocation getModelResource(KirbEntity entity) {
@@ -26,49 +36,26 @@ public class KirbModel extends GeoModel<KirbEntity> {
 
     @Override
     public ResourceLocation getTextureResource(KirbEntity entity) {
-        // Determine texture based on Kirb's state
-        String texturePath = getTexturePathForEntity(entity);
-        return new ResourceLocation(UsualAllies.MOD_ID, texturePath);
+        return new ResourceLocation(UsualAllies.MOD_ID, getBodyTexturePath(entity));
     }
 
     @Override
     public ResourceLocation getAnimationResource(KirbEntity entity) {
         return ANIMATION;
     }
-    
+
     /**
-     * Determines the correct texture path based on Kirb's current state.
-     * Textures should be placed in: assets/usualallies/textures/entity/kirb/
-     * 
-     * Texture files needed:
-     * - kirb_body.png (or kirb_body_[color].png for dyed versions)
-     * - kirb_face_default.png (spawned, not befriended)
-     * - kirb_face_full.png (befriended, full health)
-     * - kirb_face_medium.png (befriended, medium health)
-     * - kirb_face_low.png (befriended, low health)
-     * 
-     * The body and face are separate layers combined in the final texture.
+     * Returns the body texture path for {@code entity}.
+     * Format: {@code textures/entity/kirb/body/body_(color).png}.
+     * Default pink uses {@code body_default.png}.
      */
-    private String getTexturePathForEntity(KirbEntity entity) {
-        // Base path for textures
-        String basePath = "textures/entity/kirb/";
-        
-        // Get color suffix if dyed (-1 = default pink, no suffix)
+    private String getBodyTexturePath(KirbEntity entity) {
         int color = entity.getColor();
-        String colorSuffix = "";
-        if (color >= 0) {
-            // Use dye color names: white, orange, magenta, light_blue, yellow, lime, pink, gray,
-            // light_gray, cyan, purple, blue, brown, green, red, black
-            String[] colorNames = {"white", "orange", "magenta", "light_blue", "yellow", "lime",
-                    "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"};
-            if (color < colorNames.length) {
-                colorSuffix = "_" + colorNames[color];
-            }
+        String colorName = "default";
+        if (color >= 0 && color < COLOR_NAMES.length) {
+            colorName = COLOR_NAMES[color];
         }
-        
-        // Main texture path - body texture includes color variant
-        // For now, return the main body texture
-        // Face overlay is handled separately if your model supports it
-        return basePath + "kirb" + colorSuffix + ".png";
+        return "textures/entity/kirb/body/body_" + colorName + ".png";
     }
 }
+
