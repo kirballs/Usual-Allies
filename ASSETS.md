@@ -59,9 +59,9 @@ Folder: `assets/usualallies/textures/item/`
 
 Folder: `assets/usualallies/textures/particle/`
 
-- `air_big_0.png` – Large air-puff, particle type `usualallies:air_big` (inhale suction, big variant)
-- `air_medium_0.png` – Medium air-puff, particle type `usualallies:air_medium` (inhale suction, medium variant)
-- `air_small_0.png` – Small air-puff, particle type `usualallies:air_small` (inhale suction, small variant)
+- `air_big.png` – Large air-puff, particle type `usualallies:air_big` (inhale suction, big variant)
+- `air_medium.png` – Medium air-puff, particle type `usualallies:air_medium` (inhale suction, medium variant)
+- `air_small.png` – Small air-puff, particle type `usualallies:air_small` (inhale suction, small variant)
 
 ---
 

@@ -16,17 +16,17 @@ public class ModParticles {
             DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, UsualAllies.MOD_ID);
 
     // Large air puff - inhale suction particle (big variant)
-    // Texture: assets/usualallies/textures/particle/air_big_0.png
+    // Texture: assets/usualallies/textures/particle/air_big.png
     public static final RegistryObject<SimpleParticleType> AIR_BIG =
             PARTICLE_TYPES.register("air_big", () -> new SimpleParticleType(false));
 
     // Medium air puff - inhale suction particle (medium variant)
-    // Texture: assets/usualallies/textures/particle/air_medium_0.png
+    // Texture: assets/usualallies/textures/particle/air_medium.png
     public static final RegistryObject<SimpleParticleType> AIR_MEDIUM =
             PARTICLE_TYPES.register("air_medium", () -> new SimpleParticleType(false));
 
     // Small air puff - inhale suction particle (small variant)
-    // Texture: assets/usualallies/textures/particle/air_small_0.png
+    // Texture: assets/usualallies/textures/particle/air_small.png
     public static final RegistryObject<SimpleParticleType> AIR_SMALL =
             PARTICLE_TYPES.register("air_small", () -> new SimpleParticleType(false));
 }
