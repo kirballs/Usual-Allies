@@ -5,6 +5,7 @@ import kirballs.usualallies.client.renderer.AirBulletProjectileRenderer;
 import kirballs.usualallies.client.renderer.FriendHeartProjectileRenderer;
 import kirballs.usualallies.client.renderer.KirbRenderer;
 import kirballs.usualallies.client.renderer.StarProjectileRenderer;
+import kirballs.usualallies.network.ModNetwork;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -40,6 +41,7 @@ public class UsualAllies {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(ModNetwork::register);
         LOGGER.info("Usual Allies common setup complete!");
     }
 
@@ -66,4 +68,3 @@ public class UsualAllies {
         private static final Logger LOGGER = LoggerFactory.getLogger(ClientModEvents.class);
     }
 }
-
