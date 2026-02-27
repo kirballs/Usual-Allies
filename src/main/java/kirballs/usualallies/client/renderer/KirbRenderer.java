@@ -1,39 +1,23 @@
 package kirballs.usualallies.client.renderer;
 
-import kirballs.usualallies.UsualAllies;
 import kirballs.usualallies.client.model.KirbModel;
+import kirballs.usualallies.client.renderer.layer.KirbFaceLayer;
 import kirballs.usualallies.entity.kirb.KirbEntity;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
-import com.mojang.blaze3d.vertex.PoseStack;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 /**
  * GeckoLib renderer for Kirb entity.
  * Handles rendering the entity with animations.
+ * A {@link KirbFaceLayer} is added on top to apply the state-appropriate face texture.
  */
 public class KirbRenderer extends GeoEntityRenderer<KirbEntity> {
 
     public KirbRenderer(EntityRendererProvider.Context context) {
         super(context, new KirbModel());
-        // Shadow size - adjust based on entity size
-        this.shadowRadius = 0.4f; // Slightly smaller than player shadow
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(KirbEntity entity) {
-        // Delegate to model for texture selection
-        return super.getTextureLocation(entity);
-    }
-
-    @Override
-    public void render(KirbEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
-                       MultiBufferSource bufferSource, int packedLight) {
-        // Scale adjustment if needed
-        // Default scale is 1.0f
-        // poseStack.scale(1.0f, 1.0f, 1.0f);
-        
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        this.shadowRadius = 0.4f;
+        // Register face overlay as an additional render layer
+        this.addRenderLayer(new KirbFaceLayer(this));
     }
 }
+

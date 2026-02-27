@@ -4,6 +4,7 @@
     "entity.usualallies.kirb.command.stay": "Kirb: Staying",
     "entity.usualallies.kirb.command.wander": "Kirb: Wandering",
     "entity.usualallies.kirb.command.patrol": "Kirb: Patrolling",
+    "entity.usualallies.kirb.escape_hint": "Mash sprint/sneak to escape!",
     "item.usualallies.kirb_spawn_egg": "Kirb Spawn Egg",
     "item.usualallies.friend_heart": "Friend Heart",
     "item.usualallies.one_up": "1-Up",

@@ -248,6 +248,73 @@
                     }
                 }
             }
+        },
+        "animation.kirb.held": {
+            "loop": true,
+            "animation_length": 1.0,
+            "bones": {
+                "main": {
+                    "rotation": {
+                        "0.0": [-10, 0, 0]
+                    }
+                },
+                "leftarm": {
+                    "rotation": {
+                        "0.0": [0, 0, -30]
+                    }
+                },
+                "rightarm": {
+                    "rotation": {
+                        "0.0": [0, 0, 30]
+                    }
+                },
+                "leftleg": {
+                    "rotation": {
+                        "0.0": [20, 0, 0]
+                    }
+                },
+                "rightleg": {
+                    "rotation": {
+                        "0.0": [20, 0, 0]
+                    }
+                }
+            }
+        },
+        "animation.kirb.pushback": {
+            "loop": false,
+            "animation_length": 0.6,
+            "bones": {
+                "main": {
+                    "position": {
+                        "0.0": [0, 0, 0],
+                        "0.2": [0, 0, 3],
+                        "0.6": [0, 0, 0]
+                    }
+                }
+            }
+        },
+        "animation.kirb.mouthful": {
+            "loop": true,
+            "animation_length": 1.0,
+            "bones": {
+                "head": {
+                    "scale": {
+                        "0.0": [1.15, 1.15, 1.15],
+                        "0.5": [1.2, 1.1, 1.2],
+                        "1.0": [1.15, 1.15, 1.15]
+                    }
+                },
+                "leftarm": {
+                    "rotation": {
+                        "0.0": [0, 0, -25]
+                    }
+                },
+                "rightarm": {
+                    "rotation": {
+                        "0.0": [0, 0, 25]
+                    }
+                }
+            }
         }
     }
 }
