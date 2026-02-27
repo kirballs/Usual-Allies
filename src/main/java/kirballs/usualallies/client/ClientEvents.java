@@ -4,10 +4,12 @@ import kirballs.usualallies.ModParticles;
 import kirballs.usualallies.UsualAllies;
 import kirballs.usualallies.entity.kirb.KirbEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -98,5 +100,37 @@ public class ClientEvents {
         mc.level.addParticle(type,
                 spawnPos.x, spawnPos.y, spawnPos.z,
                 vel.x, vel.y, vel.z);
+    }
+
+    // -------------------------------------------------------------------------
+    // Black-out screen while the local player is captured inside Kirb's mouth
+    // -------------------------------------------------------------------------
+
+    /**
+     * Fires after the 3-D world is rendered but before the HUD, so the black
+     * fill covers the world view while the hotbar, health bar, etc. remain
+     * visible on top – identical to the behaviour when suffocating inside a block.
+     */
+    @SubscribeEvent
+    public static void onRenderGuiPre(RenderGuiEvent.Pre event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null || mc.level == null) return;
+
+        int localId = mc.player.getId();
+        boolean captured = false;
+        for (Entity entity : mc.level.entitiesForRendering()) {
+            if (entity instanceof KirbEntity kirb
+                    && kirb.getCapturedEntityId() == localId) {
+                captured = true;
+                break;
+            }
+        }
+        if (!captured) return;
+
+        GuiGraphics graphics = event.getGuiGraphics();
+        int w = mc.getWindow().getGuiScaledWidth();
+        int h = mc.getWindow().getGuiScaledHeight();
+        // Solid black – matches the opaque feel of suffocating in a block
+        graphics.fill(0, 0, w, h, 0xFF000000);
     }
 }

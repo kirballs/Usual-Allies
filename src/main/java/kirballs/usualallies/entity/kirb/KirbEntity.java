@@ -105,6 +105,9 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
     /** True while the pushback animation should play (player escaped from mouth). */
     private static final EntityDataAccessor<Boolean> DATA_PUSHBACK =
             SynchedEntityData.defineId(KirbEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Entity ID of a captured *player*, or -1. Synced so the client can show the black-out. */
+    private static final EntityDataAccessor<Integer> DATA_CAPTURED_ENTITY_ID =
+            SynchedEntityData.defineId(KirbEntity.class, EntityDataSerializers.INT);
 
     // =========================================================================
     // CONSTANTS
@@ -213,6 +216,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         this.entityData.define(DATA_CARRY_STATE, CARRY_NONE);
         this.entityData.define(DATA_FACE_STATE,  FACE_O);
         this.entityData.define(DATA_PUSHBACK,    false);
+        this.entityData.define(DATA_CAPTURED_ENTITY_ID, -1);
     }
 
     // =========================================================================
@@ -584,6 +588,8 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
                 playerEscapeCount    = 0;
                 lastPlayerCrouching  = entity.isCrouching();
                 lastPlayerSprinting  = entity.isSprinting();
+                // Sync the player's entity ID so the client can apply the black-out
+                this.entityData.set(DATA_CAPTURED_ENTITY_ID, entity.getId());
             }
 
             playSound(ModSounds.KIRB_MOUTHFUL.get(), 1.0f, 1.0f);
@@ -640,6 +646,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         capturedEntity      = null;
         capturedEntityUUID  = null;
         setHasCaptured(false);
+        this.entityData.set(DATA_CAPTURED_ENTITY_ID, -1);
         mouthDamageTimer    = 0;
         playerEscapeCount   = 0;
         playerEscapeRequired = 0;
@@ -978,6 +985,9 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
 
     public boolean isPushback()              { return this.entityData.get(DATA_PUSHBACK); }
     public void setPushback(boolean v)       { this.entityData.set(DATA_PUSHBACK, v); }
+
+    /** Entity ID of the currently captured player, or -1 if none. Used client-side for the black-out. */
+    public int getCapturedEntityId()         { return this.entityData.get(DATA_CAPTURED_ENTITY_ID); }
 
     @Nullable public LivingEntity getCapturedEntity() { return capturedEntity; }
     @Nullable public BlockPos     getPatrolCenter()   { return patrolCenter; }
