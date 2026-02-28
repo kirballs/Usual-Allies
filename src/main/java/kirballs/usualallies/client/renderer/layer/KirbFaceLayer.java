@@ -26,6 +26,7 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
  *   face_mouthful.png - entity captured in mouth
  *   face_open.png     - inhaling / expelling star
  *   face_lowhp.png    - low health
+ *   face_blowout.png  - blowing out air bullet after flight
  */
 public class KirbFaceLayer extends GeoRenderLayer<KirbEntity> {
 
@@ -37,6 +38,7 @@ public class KirbFaceLayer extends GeoRenderLayer<KirbEntity> {
     public static final int FACE_MOUTHFUL = 2;
     public static final int FACE_OPEN     = 3;
     public static final int FACE_LOWHP    = 4;
+    public static final int FACE_BLOWOUT  = 5;
 
     public KirbFaceLayer(GeoRenderer<KirbEntity> entityRenderer) {
         super(entityRenderer);
@@ -66,6 +68,7 @@ public class KirbFaceLayer extends GeoRenderLayer<KirbEntity> {
             case FACE_MOUTHFUL -> "face_mouthful";
             case FACE_OPEN     -> "face_open";
             case FACE_LOWHP    -> "face_lowhp";
+            case FACE_BLOWOUT  -> "face_blowout";
             default            -> "face_o";  // FACE_O (0) and any unfriended state
         };
         return new ResourceLocation(UsualAllies.MOD_ID, FACE_BASE + name + ".png");
