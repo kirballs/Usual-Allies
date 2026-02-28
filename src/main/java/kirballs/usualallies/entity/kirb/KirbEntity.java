@@ -149,7 +149,6 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
     private static final int SPIT_FACE_DURATION = 8;
     // Blowout face during post-flight air projectile animation
     private static final int BLOWOUT_FACE_DURATION = 10;
-    private static final int SPIT_BLOWOUT_FACE_DURATION = 8;
 
     // =========================================================================
     // INSTANCE VARIABLES
@@ -183,9 +182,8 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
 
     // Face state helpers
     private boolean wasLowHp       = false;
-    private int     spitFaceTimer      = 0;
-    private int     blowoutFaceTimer    = 0;
-    private int     spitBlowoutFaceTimer = 0;
+    private int     spitFaceTimer   = 0;
+    private int     blowoutFaceTimer = 0;
 
     // Walk loop sound
     private int walkSoundTimer = 0;
@@ -296,6 +294,11 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
             if (getBlowoutAnimTicks() > 0) {
                 setBlowoutAnimTicks(getBlowoutAnimTicks() - 1);
             }
+        }
+
+        // Blowout-face linger countdown
+        if (blowoutFaceTimer > 0) {
+            blowoutFaceTimer--;
         }
 
         // Handle carry states
@@ -705,7 +708,6 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
 
             // Use blowout face while the air-bullet exhale animation plays
             blowoutFaceTimer = BLOWOUT_FACE_DURATION;
-            setBlowoutAnimTicks(BLOWOUT_FACE_DURATION);
         }
     }
 
@@ -736,7 +738,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         int face;
         if (hasCapturedEntity()) {
             face = FACE_MOUTHFUL;
-        } else if (blowoutFaceTimer > 0 || spitBlowoutFaceTimer > 0) {
+        } else if (blowoutFaceTimer > 0) {
             face = FACE_BLOWOUT;
         } else if (isInhaling() || spitFaceTimer > 0) {
             face = FACE_OPEN;
@@ -944,7 +946,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
             return state.setAndContinue(RawAnimation.begin().thenLoop("animation.kirb.fly"));
         }
 
-        if (getBlowoutAnimTicks() > 0) {
+        if (blowoutFaceTimer > 0) {
             return state.setAndContinue(RawAnimation.begin()
                     .then("animation.kirb.air_bullet", Animation.LoopType.PLAY_ONCE));
         }
