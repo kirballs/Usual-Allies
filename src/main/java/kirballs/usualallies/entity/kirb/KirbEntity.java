@@ -55,7 +55,7 @@ import java.util.UUID;
  * - 3-lives system with respawn timer
  * - Fly mode with reduced gravity and arm-flap boost
  * - Dye support for body colour
- * - Separate body/face texture system (5 face states)
+ * - Separate body/face texture system (6 face states)
  * - Only retaliates against enemies who hurt the owner (no OwnerHurtTargetGoal)
  */
 public class KirbEntity extends TamableAnimal implements GeoEntity {
@@ -78,6 +78,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
     public static final int FACE_MOUTHFUL = 2;  // entity captured until swallow end
     public static final int FACE_OPEN     = 3;  // inhaling / expelling star
     public static final int FACE_LOWHP    = 4;  // low health
+    public static final int FACE_BLOWOUT  = 5;  // blowing out air bullet after flight
 
     // =========================================================================
     // SYNCHED DATA ACCESSORS
@@ -143,6 +144,9 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
 
     // Face-open lingers briefly after spitting
     private static final int SPIT_FACE_DURATION = 8;
+    // Blowout face during post-flight air projectile animation
+    private static final int BLOWOUT_FACE_DURATION = 10;
+    private static final int SPIT_BLOWOUT_FACE_DURATION = 8;
 
     // =========================================================================
     // INSTANCE VARIABLES
@@ -176,7 +180,9 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
 
     // Face state helpers
     private boolean wasLowHp       = false;
-    private int     spitFaceTimer  = 0;
+    private int     spitFaceTimer      = 0;
+    private int     blowoutFaceTimer    = 0;
+    private int     spitBlowoutFaceTimer = 0;
 
     // Walk loop sound
     private int walkSoundTimer = 0;
@@ -267,6 +273,16 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         // Spit-face linger countdown
         if (spitFaceTimer > 0) {
             spitFaceTimer--;
+        }
+
+        // Blowout-face linger countdown
+        if (blowoutFaceTimer > 0) {
+            blowoutFaceTimer--;
+        }
+
+        // Blowout face when spitting out a captured mob
+        if (spitBlowoutFaceTimer > 0) {
+            spitBlowoutFaceTimer--;
         }
 
         // Handle carry states
@@ -630,6 +646,8 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
 
         // Keep face_open briefly after the spit
         spitFaceTimer = SPIT_FACE_DURATION;
+        // Also use blowout face while spitting out a captured mob
+        spitBlowoutFaceTimer = SPIT_BLOWOUT_FACE_DURATION;
     }
 
     private void performSwallow() {
@@ -671,6 +689,9 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
             Vec3 dir = this.getLookAngle();
             bullet.shoot(dir.x, dir.y - 0.3, dir.z, 0.5f, 5);
             level().addFreshEntity(bullet);
+
+            // Use blowout face while the air-bullet exhale animation plays
+            blowoutFaceTimer = BLOWOUT_FACE_DURATION;
         }
     }
 
@@ -701,6 +722,8 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         int face;
         if (hasCapturedEntity()) {
             face = FACE_MOUTHFUL;
+        } else if (blowoutFaceTimer > 0 || spitBlowoutFaceTimer > 0) {
+            face = FACE_BLOWOUT;
         } else if (isInhaling() || spitFaceTimer > 0) {
             face = FACE_OPEN;
         } else if (getHealthState() == 2) {
@@ -720,12 +743,17 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         if (!level().isClientSide && this.onGround() && getCarryState() == CARRY_NONE) {
             double hSpeed = this.getDeltaMovement().horizontalDistance();
             if (hSpeed > 0.02) {
-                // Running uses a shorter loop interval
+                // Play the same step sound twice per animation unit:
+                // once at the midpoint and once at the loop end.
                 int interval = (hSpeed > 0.15) ? RUN_SOUND_INTERVAL : WALK_SOUND_INTERVAL;
+                int halfInterval = Math.max(1, interval / 2);
+
                 walkSoundTimer++;
+                if (walkSoundTimer == halfInterval || walkSoundTimer >= interval) {
+                    playSound(ModSounds.KIRB_STEP.get(), 0.22f, hSpeed > 0.15 ? 1.15f : 1.0f);
+                }
                 if (walkSoundTimer >= interval) {
                     walkSoundTimer = 0;
-                    playSound(ModSounds.KIRB_WALK.get(), 0.6f, hSpeed > 0.15 ? 1.2f : 1.0f);
                 }
             } else {
                 walkSoundTimer = 0;
@@ -884,6 +912,11 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
             return state.setAndContinue(RawAnimation.begin().thenLoop("animation.kirb.held"));
         }
 
+        // Ordered sit / stay mode – static sitting pose
+        if (this.isOrderedToSit()) {
+            return state.setAndContinue(RawAnimation.begin().thenLoop("animation.kirb.sit"));
+        }
+
         // Entity in mouth – puffed idle
         if (hasCapturedEntity()) {
             return state.setAndContinue(RawAnimation.begin().thenLoop("animation.kirb.mouthful"));
@@ -895,6 +928,11 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
 
         if (isFlying()) {
             return state.setAndContinue(RawAnimation.begin().thenLoop("animation.kirb.fly"));
+        }
+
+        if (blowoutFaceTimer > 0) {
+            return state.setAndContinue(RawAnimation.begin()
+                    .then("animation.kirb.air_bullet", Animation.LoopType.PLAY_ONCE));
         }
 
         if (this.getDeltaMovement().y < -0.1 && !this.onGround()) {
@@ -1031,4 +1069,3 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         }
     }
 }
-
