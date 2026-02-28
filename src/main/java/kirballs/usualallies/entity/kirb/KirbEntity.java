@@ -106,6 +106,9 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
     /** True while the pushback animation should play (player escaped from mouth). */
     private static final EntityDataAccessor<Boolean> DATA_PUSHBACK =
             SynchedEntityData.defineId(KirbEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Remaining ticks for post-flight air-bullet animation playback (synced to clients). */
+    private static final EntityDataAccessor<Integer> DATA_BLOWOUT_ANIM_TICKS =
+            SynchedEntityData.defineId(KirbEntity.class, EntityDataSerializers.INT);
     /** Entity ID of a captured *player*, or -1. Synced so the client can show the black-out. */
     private static final EntityDataAccessor<Integer> DATA_CAPTURED_ENTITY_ID =
             SynchedEntityData.defineId(KirbEntity.class, EntityDataSerializers.INT);
@@ -222,6 +225,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         this.entityData.define(DATA_CARRY_STATE, CARRY_NONE);
         this.entityData.define(DATA_FACE_STATE,  FACE_O);
         this.entityData.define(DATA_PUSHBACK,    false);
+        this.entityData.define(DATA_BLOWOUT_ANIM_TICKS, 0);
         this.entityData.define(DATA_CAPTURED_ENTITY_ID, -1);
     }
 
@@ -257,8 +261,10 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
     public void tick() {
         super.tick();
 
-        updateHealthState();
-        updateFaceState();
+        if (!level().isClientSide) {
+            updateHealthState();
+            updateFaceState();
+        }
         tickWalkSound();
 
         if (respawnTimer > 0 && --respawnTimer == 0) {
@@ -270,19 +276,26 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
             setPushback(false);
         }
 
-        // Spit-face linger countdown
-        if (spitFaceTimer > 0) {
-            spitFaceTimer--;
-        }
+        if (!level().isClientSide) {
+            // Spit-face linger countdown
+            if (spitFaceTimer > 0) {
+                spitFaceTimer--;
+            }
 
-        // Blowout-face linger countdown
-        if (blowoutFaceTimer > 0) {
-            blowoutFaceTimer--;
-        }
+            // Blowout-face linger countdown
+            if (blowoutFaceTimer > 0) {
+                blowoutFaceTimer--;
+            }
 
-        // Blowout face when spitting out a captured mob
-        if (spitBlowoutFaceTimer > 0) {
-            spitBlowoutFaceTimer--;
+            // Blowout face when spitting out a captured mob
+            if (spitBlowoutFaceTimer > 0) {
+                spitBlowoutFaceTimer--;
+            }
+
+            // Synced post-flight blowout animation timer for clients
+            if (getBlowoutAnimTicks() > 0) {
+                setBlowoutAnimTicks(getBlowoutAnimTicks() - 1);
+            }
         }
 
         // Handle carry states
@@ -692,6 +705,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
 
             // Use blowout face while the air-bullet exhale animation plays
             blowoutFaceTimer = BLOWOUT_FACE_DURATION;
+            setBlowoutAnimTicks(BLOWOUT_FACE_DURATION);
         }
     }
 
@@ -930,7 +944,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
             return state.setAndContinue(RawAnimation.begin().thenLoop("animation.kirb.fly"));
         }
 
-        if (blowoutFaceTimer > 0) {
+        if (getBlowoutAnimTicks() > 0) {
             return state.setAndContinue(RawAnimation.begin()
                     .then("animation.kirb.air_bullet", Animation.LoopType.PLAY_ONCE));
         }
@@ -977,7 +991,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
     @Override
     protected void playStepSound(BlockPos pos,
             net.minecraft.world.level.block.state.BlockState state) {
-        this.playSound(ModSounds.KIRB_STEP.get(), 0.15f, 1.0f);
+        // Footstep audio is driven by tickWalkSound() to align with animation timing.
     }
 
     @Override
@@ -1023,6 +1037,9 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
 
     public boolean isPushback()              { return this.entityData.get(DATA_PUSHBACK); }
     public void setPushback(boolean v)       { this.entityData.set(DATA_PUSHBACK, v); }
+
+    public int getBlowoutAnimTicks()         { return this.entityData.get(DATA_BLOWOUT_ANIM_TICKS); }
+    public void setBlowoutAnimTicks(int v)   { this.entityData.set(DATA_BLOWOUT_ANIM_TICKS, v); }
 
     /** Entity ID of the currently captured player, or -1 if none. Used client-side for the black-out. */
     public int getCapturedEntityId()         { return this.entityData.get(DATA_CAPTURED_ENTITY_ID); }
