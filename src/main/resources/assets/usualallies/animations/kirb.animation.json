@@ -293,6 +293,34 @@
                 }
             }
         },
+        "animation.kirb.sit": {
+            "loop": true,
+            "animation_length": 1,
+            "bones": {
+                "head": {
+                    "position": [0, -3, 0]
+                },
+                "leftarm": {
+                    "rotation": [0, 0, 30],
+                    "position": [0, -4, 3]
+                },
+                "rightarm": {
+                    "rotation": [0, 0, -30],
+                    "position": [0, -4, 2]
+                },
+                "rightleg": {
+                    "rotation": [-40, 0, 0],
+                    "position": [-0.1, -2, -1]
+                },
+                "main": {
+                    "position": [0, -1, 0]
+                },
+                "leftleg": {
+                    "rotation": [-40, 0, 0],
+                    "position": [0.1, -2, -1]
+                }
+            }
+        },
         "animation.kirb.mouthful": {
             "loop": true,
             "animation_length": 1.0,

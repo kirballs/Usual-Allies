@@ -884,6 +884,11 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
             return state.setAndContinue(RawAnimation.begin().thenLoop("animation.kirb.held"));
         }
 
+        // Ordered sit / stay mode – static sitting pose
+        if (this.isOrderedToSit()) {
+            return state.setAndContinue(RawAnimation.begin().thenLoop("animation.kirb.sit"));
+        }
+
         // Entity in mouth – puffed idle
         if (hasCapturedEntity()) {
             return state.setAndContinue(RawAnimation.begin().thenLoop("animation.kirb.mouthful"));
@@ -1031,4 +1036,3 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         }
     }
 }
-
