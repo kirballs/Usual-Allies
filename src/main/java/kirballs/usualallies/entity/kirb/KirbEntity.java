@@ -734,12 +734,17 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         if (!level().isClientSide && this.onGround() && getCarryState() == CARRY_NONE) {
             double hSpeed = this.getDeltaMovement().horizontalDistance();
             if (hSpeed > 0.02) {
-                // Running uses a shorter loop interval
+                // Play the same step sound twice per animation unit:
+                // once at the midpoint and once at the loop end.
                 int interval = (hSpeed > 0.15) ? RUN_SOUND_INTERVAL : WALK_SOUND_INTERVAL;
+                int halfInterval = Math.max(1, interval / 2);
+
                 walkSoundTimer++;
+                if (walkSoundTimer == halfInterval || walkSoundTimer >= interval) {
+                    playSound(ModSounds.KIRB_STEP.get(), 0.22f, hSpeed > 0.15 ? 1.15f : 1.0f);
+                }
                 if (walkSoundTimer >= interval) {
                     walkSoundTimer = 0;
-                    playSound(ModSounds.KIRB_WALK.get(), 0.6f, hSpeed > 0.15 ? 1.2f : 1.0f);
                 }
             } else {
                 walkSoundTimer = 0;
