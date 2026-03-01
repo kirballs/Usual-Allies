@@ -70,7 +70,8 @@ public class AllyFollowOwnerGoal extends Goal {
         }
         
         // Try to get the owner entity
-        if (ally.level().getPlayerByUUID(ownerUUID) instanceof Player player) {
+        Player player = ally.level().getPlayerByUUID(ownerUUID);
+        if (player != null) {
             this.owner = player;
             
             // Check if far enough to start following

@@ -149,6 +149,8 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
     private static final int SPIT_FACE_DURATION = 8;
     // Blowout face during post-flight air projectile animation
     private static final int BLOWOUT_FACE_DURATION = 10;
+    // Blowout face when spitting out a captured mob
+    private static final int SPIT_BLOWOUT_FACE_DURATION = 10;
 
     // =========================================================================
     // INSTANCE VARIABLES
@@ -184,6 +186,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
     private boolean wasLowHp       = false;
     private int     spitFaceTimer   = 0;
     private int     blowoutFaceTimer = 0;
+    private int     spitBlowoutFaceTimer = 0;
 
     // Walk loop sound
     private int walkSoundTimer = 0;
@@ -916,7 +919,7 @@ public class KirbEntity extends TamableAnimal implements GeoEntity {
         controllers.add(new AnimationController<>(this, "controller", 5, this::predicate));
     }
 
-    private PlayState predicate(AnimationState<KirbEntity> state) {
+    private PlayState predicate(software.bernie.geckolib.core.animation.AnimationState<KirbEntity> state) {
         // Pushback (player escaped) – highest priority
         if (isPushback()) {
             return state.setAndContinue(RawAnimation.begin()
